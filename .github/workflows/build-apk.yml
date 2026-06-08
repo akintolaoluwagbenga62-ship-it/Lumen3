@@ -31,6 +31,17 @@ jobs:
       - name: Create local.properties
         run: echo "sdk.dir=$ANDROID_HOME" > android/local.properties
 
+      - name: Re-download Gradle wrapper JAR
+        run: |
+          GRADLE_VERSION=$(grep distributionUrl android/gradle/wrapper/gradle-wrapper.properties | grep -oP 'gradle-\K[0-9.]+(?=-)')
+          curl -fL "https://raw.githubusercontent.com/gradle/gradle/v${GRADLE_VERSION}.0/gradle/wrapper/gradle-wrapper.jar" \
+            -o android/gradle/wrapper/gradle-wrapper.jar || \
+          curl -fL "https://github.com/gradle/gradle/raw/v${GRADLE_VERSION}.0/gradle/wrapper/gradle-wrapper.jar" \
+            -o android/gradle/wrapper/gradle-wrapper.jar || true
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
       - name: Accept Android licenses
         run: yes | flutter doctor --android-licenses || true
 
