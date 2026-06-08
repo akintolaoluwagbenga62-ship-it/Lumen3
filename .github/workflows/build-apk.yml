@@ -28,6 +28,9 @@ jobs:
       - name: Flutter version
         run: flutter --version
 
+      - name: Create local.properties
+        run: echo "sdk.dir=$ANDROID_HOME" > android/local.properties
+
       - name: Accept Android licenses
         run: yes | flutter doctor --android-licenses || true
 
